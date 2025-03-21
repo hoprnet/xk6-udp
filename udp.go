@@ -33,10 +33,11 @@ func (udp *UDP) Connect(addr string) (net.Conn, error) {
 	return conn, nil
 }
 
-func (udp *UDP) ConnectLocalAddress(addr string, localAddrString string) (net.Conn, error) {
+func (udp *UDP) ConnectLocalAddress(addr string, localAddrString string, readTimeout int) (net.Conn, error) {
 	remoteAddr, _ := net.ResolveUDPAddr("udp", addr)
 	localAddr, _ := net.ResolveUDPAddr("udp", localAddrString)
 	conn, err := net.DialUDP("udp", localAddr, remoteAddr)
+	conn.SetReadDeadline(time.Now().Add(time.Duration(readTimeout) * time.Second))
 
 	if err != nil {
 		return nil, err
@@ -105,7 +106,6 @@ func (udp *UDP) ReadPktEx(conn net.Conn, seq int, size int) []byte {
 
 func (udp *UDP) Read(conn net.Conn, size int) ([]byte, error) {
 	buf := make([]byte, size)
-	// conn.SetReadDeadline(time.Now().Add(readTimeout * time.Second))
 	_, err := conn.Read(buf)
 	if err != nil {
 		return nil, err
