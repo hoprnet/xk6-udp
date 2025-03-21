@@ -1,4 +1,4 @@
-module github.com/ausias-armesto/xk6-udp
+module github.com/hoprnet/xk6-udp
 
 go 1.16
 
