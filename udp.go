@@ -103,8 +103,9 @@ func (udp *UDP) ReadPktEx(conn net.Conn, seq int, size int) []byte {
 	return nil
 }
 
-func (udp *UDP) Read(conn net.Conn, size int) ([]byte, error) {
+func (udp *UDP) Read(conn net.Conn, size int, readTimeout time.Duration) ([]byte, error) {
 	buf := make([]byte, size)
+	conn.SetReadDeadline(time.Now().Add(readTimeout * time.Second))
 	_, err := conn.Read(buf)
 	if err != nil {
 		return nil, err
